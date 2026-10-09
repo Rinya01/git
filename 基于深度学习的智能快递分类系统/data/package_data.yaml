@@ -1,0 +1,12 @@
+# 快递包裹分类数据集 (package classification)
+
+
+# 训练/验证集路径（相对项目根目录）
+train: datasets/package/images/train
+val: datasets/package/images/val
+
+# 类别数
+nc: 3
+
+# 类别名称：快递袋、纸箱、面单
+names: ['kuaididai', 'zhixiang', 'miandan']

@@ -1,0 +1,1027 @@
+<title>快递分类系统界面美化方案</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    color-scheme: light;
+    --page-bg:#F6F7F9;
+    --page-surface:#FFFFFF;
+    --page-ink:#12161F;
+    --page-muted:#5B6472;
+    --page-line:#E3E6EC;
+    --page-brand:#2B5CE6;
+    --page-code-bg:#F2F4F8;
+    --page-shadow-lg:0 12px 32px -12px rgba(16,24,40,.22), 0 2px 8px rgba(16,24,40,.05);
+    --font-ui:'Noto Sans SC','Microsoft YaHei UI','Microsoft YaHei','Segoe UI',system-ui,sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,Consolas,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --page-bg:#0F1115; --page-surface:#171A21; --page-ink:#E8EAF0;
+      --page-muted:#9BA3B4; --page-line:#262B36; --page-brand:#7FA0FF;
+      --page-code-bg:#141821;
+      --page-shadow-lg:0 12px 32px -12px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page-bg:#0F1115; --page-surface:#171A21; --page-ink:#E8EAF0;
+    --page-muted:#9BA3B4; --page-line:#262B36; --page-brand:#7FA0FF;
+    --page-code-bg:#141821;
+    --page-shadow-lg:0 12px 32px -12px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page-bg);color:var(--page-ink);font-family:var(--font-ui);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:36px 72px}
+  h1{font-size:clamp(23px,3.2vw,32px);line-height:1.28;margin:8px 0 12px;font-weight:700;text-wrap:balance;letter-spacing:-.01em}
+  h2{font-size:19px;font-weight:700;margin:0 0 6px;letter-spacing:-.005em}
+  h3{font-size:14px;font-weight:700;margin:0 0 8px}
+  p{margin:0 0 12px;color:var(--page-muted)}
+  a{color:var(--page-brand)}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--page-brand);margin:0}
+
+  /* ---------- 页头 ---------- */
+  .head{padding-bottom:26px;border-bottom:1px solid var(--page-line);margin-bottom:30px}
+  .head .lede{max-width:64ch;font-size:15px;color:var(--page-muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .kw{font-size:12.5px;padding:5px 11px;border-radius:999px;background:var(--page-surface);border:1px solid var(--page-line);color:var(--page-muted)}
+  .kw b{color:var(--page-ink);font-weight:500}
+
+  /* ---------- 通用区块 ---------- */
+  section{margin-top:52px;scroll-margin-top:16px}
+  .sec-head{margin-bottom:20px}
+  .sec-head p{max-width:68ch}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--page-line);border-radius:12px;background:var(--page-surface)}
+  table.doc{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+  table.doc th{text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:var(--page-muted);padding:11px 14px;border-bottom:1px solid var(--page-line);white-space:nowrap}
+  table.doc td{padding:11px 14px;border-bottom:1px solid var(--page-line);vertical-align:top}
+  table.doc tr:last-child td{border-bottom:none}
+  table.doc td:first-child{color:var(--page-ink);font-weight:500;white-space:nowrap}
+  code.inl{font-family:var(--font-mono);font-size:12.5px;background:var(--page-code-bg);border:1px solid var(--page-line);border-radius:5px;padding:1px 5px}
+  .old{color:var(--page-muted);text-decoration:line-through;text-decoration-thickness:1px}
+  .arrow{color:var(--page-muted);padding:0 6px}
+
+  /* ---------- 规范条 ---------- */
+  .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  .card{background:var(--page-surface);border:1px solid var(--page-line);border-radius:var(--radius);padding:16px 18px}
+  .card h3{display:flex;align-items:center;gap:8px}
+  .swatches{display:flex;flex-wrap:wrap;gap:10px}
+  .sw{width:74px}
+  .sw i{display:block;height:44px;border-radius:9px;border:1px solid rgba(0,0,0,.06)}
+  .sw span{display:block;font-family:var(--font-mono);font-size:10.5px;color:var(--page-muted);margin-top:6px;line-height:1.35}
+  .sw b{display:block;font-size:11.5px;font-weight:500;color:var(--page-ink)}
+  .type-demo{display:flex;flex-direction:column;gap:10px}
+  .type-demo div{border-top:1px dashed var(--page-line);padding-top:9px}
+  .type-demo div:first-child{border-top:none;padding-top:0}
+  .type-demo small{font-family:var(--font-mono);font-size:10.5px;color:var(--page-muted);display:block;margin-top:2px}
+
+  /* ---------- 界面稿排版 ---------- */
+  .spec{display:grid;grid-template-columns:266px minmax(0,1fr);gap:30px;align-items:start;margin-top:26px}
+  .spec.wide{grid-template-columns:minmax(0,1fr)}
+  ul.notes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  ul.notes li{position:relative;padding-left:16px;font-size:13px;color:var(--page-muted);line-height:1.55}
+  ul.notes li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--page-brand);opacity:.8}
+  ul.notes li b{color:var(--page-ink);font-weight:600}
+  .tag{display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;padding:1px 6px;border-radius:5px;border:1px dashed var(--page-line);color:var(--page-muted);vertical-align:1px}
+  .art{min-width:0}
+  .caption{font-size:12.5px;color:var(--page-muted);margin-top:10px}
+  .caption b{color:var(--page-ink);font-weight:500}
+
+  /* ---------- 样式表代码块 ---------- */
+  .code{margin:0;background:var(--page-code-bg);border:1px solid var(--page-line);border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--page-ink);tab-size:2}
+  .code code{font-family:inherit;white-space:pre}
+  .copybtn{position:absolute;top:10px;right:10px;z-index:2;font-family:var(--font-ui);font-size:11.5px;padding:4px 10px;border-radius:7px;border:1px solid var(--page-line);background:var(--page-surface);color:var(--page-muted);cursor:pointer}
+  .copybtn:hover{color:var(--page-brand);border-color:var(--page-brand)}
+  .copybtn:focus-visible{outline:2px solid var(--page-brand);outline-offset:2px}
+</style>
+<style>
+  /* ================= 界面稿专用：固定浅色 App 调色板 =================
+     界面稿是"应用截图",始终按浅色渲染,不随阅读主题变化。 */
+  .mock{
+    --app-bg:#F4F6FA; --app-surface:#FFFFFF; --app-ink:#101828; --app-muted:#667085;
+    --app-line:#E4E7EC; --app-brand:#2B5CE6; --app-brand-d:#1E47B8; --app-navy:#0E1B3D;
+    --app-amber:#F59E0B; --app-amber-bg:#FEF3E2; --app-green:#12915A; --app-green-bg:#E7F6EE;
+    --app-red:#E5484D; --app-red-bg:#FDECEC; --app-blue-bg:#EAF0FF;
+    background:var(--app-bg); color:var(--app-ink);
+    font-size:12.5px; line-height:1.5; font-weight:400;
+    border-radius:12px; overflow:hidden;
+    border:1px solid rgba(16,24,40,.10); box-shadow:var(--page-shadow-lg);
+  }
+  .mock .mono{font-family:var(--font-mono)}
+  .winbar{display:flex;align-items:center;gap:10px;height:34px;padding:0 12px;background:var(--app-surface);border-bottom:1px solid var(--app-line)}
+  .dots{display:flex;gap:6px}
+  .dots i{width:10px;height:10px;border-radius:50%;background:#E4E7EC}
+  .dots i:first-child{background:#F5C2C3}
+  .winbar .wt{font-size:11.5px;color:var(--app-muted);margin-inline:auto;font-family:var(--font-mono)}
+  .appbody{display:flex;align-items:stretch}
+  .side{width:188px;flex:0 0 188px;background:var(--app-navy);padding:12px 10px;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:9px;padding:4px 8px 16px}
+  .brand i{width:27px;height:27px;border-radius:8px;background:var(--app-amber);display:grid;place-items:center;color:#3A2400;font-size:12px;font-weight:700;font-style:normal}
+  .brand span{color:#fff;font-size:12.5px;font-weight:500;line-height:1.3}
+  .nav{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:#C3CDE0;font-size:12.5px;margin-bottom:2px}
+  .nav svg{width:15px;height:15px;flex:0 0 15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .nav.on{background:var(--app-brand);color:#fff}
+  .nav .n{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;opacity:.75}
+  .navlab{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.12em;color:#6C7B99;padding:12px 10px 5px}
+  .sidefoot{margin-top:auto;border-top:1px solid rgba(255,255,255,.10);padding-top:11px;display:flex;align-items:center;gap:9px}
+  .ava{width:28px;height:28px;border-radius:50%;background:#2E3E66;color:#fff;display:grid;place-items:center;font-size:12px;flex:0 0 28px}
+  .sidefoot .u{color:#fff;font-size:12px;line-height:1.3;min-width:0}
+  .sidefoot .u small{display:block;color:#8E9CBB;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .main{flex:1;min-width:0;padding:16px 18px;display:flex;flex-direction:column;gap:13px}
+  .phead{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .phead h4{margin:0;font-size:15.5px;font-weight:700}
+  .phead p{margin:3px 0 0;font-size:11.5px;color:var(--app-muted)}
+  .spacer{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:6px;border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:500;white-space:nowrap;border:1px solid transparent;background:var(--app-brand);color:#fff}
+  .btn.ghost{background:#fff;color:var(--app-ink);border-color:var(--app-line)}
+  .btn.danger{background:#fff;color:var(--app-red);border-color:#F6C9CB}
+  .btn.sm{padding:3px 9px;font-size:11.5px;border-radius:6px}
+  .btn.dis{background:#EEF0F4;color:#98A2B3;border-color:#EEF0F4}
+  .pane{background:var(--app-surface);border:1px solid var(--app-line);border-radius:11px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .pane-h{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500}
+  .pane-h small{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;color:var(--app-muted);font-weight:400}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .canvas{position:relative;border-radius:9px;overflow:hidden;background:#EAEEF4;aspect-ratio:4/3;min-width:0}
+  .det{position:absolute;border:2px solid var(--app-green);border-radius:3px;background:rgba(18,145,90,.10)}
+  .det b{position:absolute;top:-2px;left:-2px;transform:translateY(-100%);background:var(--app-green);color:#fff;font-size:9.5px;font-weight:500;padding:1px 5px;border-radius:4px 4px 4px 0;white-space:nowrap}
+  .det.wb{border-color:var(--app-brand);background:rgba(43,92,230,.10)}
+  .det.wb b{background:var(--app-brand)}
+  .parcel{position:absolute;background:#D9B382;border-radius:3px;box-shadow:0 8px 16px -8px rgba(16,24,40,.45)}
+  .parcel::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:7px;transform:translateX(-50%);background:#C39A66}
+  .parcel span{position:absolute;background:#fff;border-radius:2px;width:36%;height:24%;left:7%;top:10%;opacity:.9}
+  .chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:999px;background:#F1F3F7;color:#475467;white-space:nowrap}
+  .chip.amber{background:var(--app-amber-bg);color:#B45309}
+  .chip.blue{background:var(--app-blue-bg);color:#1D4ED8}
+  .chip.green{background:var(--app-green-bg);color:var(--app-green)}
+  .chip.red{background:var(--app-red-bg);color:var(--app-red)}
+  .chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 6px}
+  table.t{width:100%;border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
+  table.t th{text-align:left;font-size:10.5px;font-weight:600;color:var(--app-muted);padding:7px 9px;border-bottom:1px solid var(--app-line);white-space:nowrap}
+  table.t td{padding:7px 9px;border-bottom:1px solid #F1F3F7;color:#344054;white-space:nowrap}
+  table.t tr:last-child td{border-bottom:none}
+  table.t td.mono{font-family:var(--font-mono);font-size:11px;color:#475467}
+  .fieldgrid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;font-size:11.5px;align-items:baseline}
+  .fieldgrid dt{color:var(--app-muted)}
+  .fieldgrid dd{margin:0;color:var(--app-ink);overflow-wrap:anywhere}
+  .raw{font-family:var(--font-mono);font-size:10.5px;color:var(--app-muted);background:#F7F9FC;border:1px dashed var(--app-line);border-radius:8px;padding:8px 10px;line-height:1.75;white-space:pre-wrap}
+  .stats{display:flex;gap:10px;flex-wrap:wrap}
+  .stats div{flex:1 1 110px;border:1px solid var(--app-line);border-radius:10px;padding:9px 12px;background:#fff}
+  .stats b{display:block;font-size:17px;font-weight:700;line-height:1.25;font-variant-numeric:tabular-nums}
+  .stats small{font-size:10.5px;color:var(--app-muted)}
+  .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .search{flex:1 1 150px;min-width:0;height:30px;border:1px solid var(--app-line);border-radius:8px;background:#fff;display:flex;align-items:center;padding:0 10px;color:#98A2B3;font-size:11.5px;gap:7px}
+  .search svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .statusbar{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--app-muted);font-family:var(--font-mono);flex-wrap:wrap}
+  .mfield{margin-bottom:11px}
+  .mfield label{display:block;font-size:11.5px;color:#344054;margin-bottom:4px;font-weight:500}
+  .mfield .in{min-height:34px;border:1px solid var(--app-line);border-radius:8px;background:#fff;display:flex;align-items:center;padding:6px 10px;font-size:12px;color:var(--app-ink)}
+  .mfield .in.ph{color:#98A2B3}
+  .mfield .hint{font-size:10.5px;color:var(--app-muted);margin-top:4px}
+  .focusring{border-color:var(--app-brand)!important;box-shadow:0 0 0 3px var(--app-blue-bg)}
+  .dlg{background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(16,24,40,.10);box-shadow:var(--page-shadow-lg);color:#101828;font-size:12.5px}
+  .dlg-h{padding:13px 16px;border-bottom:1px solid #E4E7EC;font-size:13.5px;font-weight:700}
+  .dlg-h small{display:block;font-weight:400;font-size:11px;color:#667085;margin-top:2px}
+  .dlg-b{padding:16px}
+  .dlg-f{padding:12px 16px;border-top:1px solid #E4E7EC;background:#FAFBFC;display:flex;gap:8px;justify-content:flex-end}
+  .toast{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #E4E7EC;border-radius:11px;padding:11px 13px;box-shadow:0 10px 24px -12px rgba(16,24,40,.35);color:#101828;font-size:12.5px}
+  .toast i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:#fff;flex:0 0 20px;margin-top:1px;font-style:normal}
+  .toast b{display:block;font-size:12.5px}
+  .toast small{color:#667085;font-size:11px}
+  .dlgrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start}
+  .emptynote{font-size:11px;color:var(--app-muted);text-align:center;padding:10px;border:1px dashed var(--app-line);border-radius:9px}
+
+  /* 长表格在窄屏内横向滚动,页面本身不横向滚动 */
+  .scrollx{overflow-x:auto;min-width:0}
+  .scrollx table.t{min-width:560px}
+
+  @media (max-width:900px){
+    .spec{grid-template-columns:minmax(0,1fr);gap:18px}
+    .duo{grid-template-columns:minmax(0,1fr)}
+  }
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header class="head">
+    <p class="eyebrow">界面优化参考稿</p>
+    <h1>智能快递分类系统 · 界面美化方案</h1>
+    <p class="lede">基于现有 PyQt5 功能不变的六个界面重绘。配色改为中性浅底 + 卡片，字体由楷体换成系统黑体，操作层级由"三个等大按钮纵排"改为"主次分明的工具栏"，表格与弹窗全部自定义样式。所有界面都按现有功能绘制，未改动业务逻辑。</p>
+    <div class="chips">
+      <span class="kw">字体 <b>楷体 → 微软雅黑</b></span>
+      <span class="kw">布局 <b>顶部标签页 → 左侧导航</b></span>
+      <span class="kw">背景 <b>全屏渐变蓝 → 浅灰底 + 白卡片</b></span>
+      <span class="kw">按钮 <b>单一样式 → 主 / 次 / 危险三级</b></span>
+      <span class="kw">表格 <b>Qt 默认 → 自定义表头与行高</b></span>
+      <span class="kw">反馈 <b>原生弹窗 → 卡片式对话框与轻提示</b></span>
+    </div>
+  </header>
+
+  <section id="direction">
+    <div class="sec-head">
+      <h2>一、优化方向对照</h2>
+      <p>每条都是可在 Qt 里直接落地的改动，按影响面从大到小排列。</p>
+    </div>
+    <div class="table-scroll">
+      <table class="doc">
+        <thead>
+          <tr><th>项目</th><th>现状</th><th>建议</th><th>落地方式</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>字体</td>
+            <td><span class="old">楷体 KaiTi，16/14px</span></td>
+            <td>微软雅黑 UI，正文 14px / 标题 16px 加粗，数字用等宽</td>
+            <td><code class="inl">QFont("Microsoft YaHei UI")</code></td>
+          </tr>
+          <tr>
+            <td>整体背景</td>
+            <td><span class="old">qlineargradient 深蓝→浅蓝铺满图片区</span></td>
+            <td>浅灰底 <code class="inl">#F4F6FA</code>，内容放进白色圆角卡片</td>
+            <td>QSS <code class="inl">background</code> + 卡片 QFrame</td>
+          </tr>
+          <tr>
+            <td>导航</td>
+            <td><span class="old">QTabWidget 顶部 5 个标签</span></td>
+            <td>左侧深色导航栏，当前项实心高亮；保留标签页方案亦可（见方案 B）</td>
+            <td>QListWidget + QStackedWidget</td>
+          </tr>
+          <tr>
+            <td>按钮</td>
+            <td><span class="old">全部同一蓝底样式，纵排占满整行</span></td>
+            <td>主操作实心蓝、次操作白底描边、危险操作红色描边；集中到右上工具栏</td>
+            <td>QSS 属性选择器 + 动态属性</td>
+          </tr>
+          <tr>
+            <td>表格</td>
+            <td><span class="old">Qt 默认网格线、行高紧、无状态区分</span></td>
+            <td>去掉竖线、行高 34px、状态用色块标签（管理员 / 成功 / 失败）</td>
+            <td>QSS + <code class="inl">setCellWidget</code> 放标签</td>
+          </tr>
+          <tr>
+            <td>识别信息</td>
+            <td><span class="old">QTextEdit 一大段文本</span></td>
+            <td>姓名 / 电话 / 运单号 / 地址 结构化字段 + 原始 OCR 文本折叠区</td>
+            <td>QFormLayout 或 Grid 布局</td>
+          </tr>
+          <tr>
+            <td>弹窗与提示</td>
+            <td><span class="old">QMessageBox（按钮为英文 Yes / No）</span></td>
+            <td>自定义中文按钮的卡片对话框；成功提示改为右下角轻提示</td>
+            <td>QDialog 子类 / <code class="inl">QMessageBox</code> 手动设按钮文本</td>
+          </tr>
+          <tr>
+            <td>空状态</td>
+            <td><span class="old">空白图片区，无引导</span></td>
+            <td>虚线框 + 一句操作提示，告诉用户下一步点哪里</td>
+            <td>QLabel 占位 + QSS dashed</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="tokens">
+    <div class="sec-head">
+      <h2>二、配色与字体规范</h2>
+      <p>界面稿统一使用下面这套值，实现时建议在 <code class="inl">config.py</code> 里集中定义，QSS 通过格式化字符串引用。</p>
+    </div>
+    <div class="spec-grid">
+      <div class="card">
+        <h3>主色与中性色</h3>
+        <div class="swatches">
+          <div class="sw"><i style="background:#2B5CE6"></i><b>主色</b><span>#2B5CE6</span></div>
+          <div class="sw"><i style="background:#0E1B3D"></i><b>导航底</b><span>#0E1B3D</span></div>
+          <div class="sw"><i style="background:#F59E0B"></i><b>点缀</b><span>#F59E0B</span></div>
+          <div class="sw"><i style="background:#F4F6FA"></i><b>页面底</b><span>#F4F6FA</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>语义色</h3>
+        <div class="swatches">
+          <div class="sw"><i style="background:#12915A"></i><b>成功</b><span>#12915A</span></div>
+          <div class="sw"><i style="background:#E5484D"></i><b>危险</b><span>#E5484D</span></div>
+          <div class="sw"><i style="background:#B45309"></i><b>包裹标签</b><span>#B45309</span></div>
+          <div class="sw"><i style="background:#E4E7EC"></i><b>描边</b><span>#E4E7EC</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>字体层级</h3>
+        <div class="type-demo">
+          <div><span style="font-size:19px;font-weight:700">页面标题 16–18px 加粗</span><small>页面标题 · Microsoft YaHei UI Semibold</small></div>
+          <div><span style="font-size:13.5px">正文与表格 14px，行高 1.5</span><small>BODY · Microsoft YaHei UI Regular</small></div>
+          <div><span class="mono" style="font-size:12.5px">运单号 SF1234567890123 · 42 ms</span><small>数据 · Consolas 等宽，便于对齐</small></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>形状与间距</h3>
+        <div class="type-demo">
+          <div><b style="font-weight:500">圆角</b> 卡片 12px · 按钮 8px · 标签 999px<small>RADIUS</small></div>
+          <div><b style="font-weight:500">间距</b> 卡片内 12px · 卡片间 14px · 区块间 24px<small>SPACING</small></div>
+          <div><b style="font-weight:500">阴影</b> 卡片 <code class="inl">0 1px 2px rgba(16,24,40,.06)</code><small>ELEVATION</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="login">
+    <div class="sec-head">
+      <h2>三、登录 / 注册</h2>
+      <p>现在是一个 350×250 的小表单，楷体标题加两个输入框。建议改为左右分栏、放大到 860×540——登录页是答辩演示的第一屏，值得多花点功夫。</p>
+    </div>
+    <div class="spec">
+      <div>
+        <ul class="notes">
+          <li><b>左右分栏</b>左侧深色品牌区放系统名称、一句话定位与版本号；右侧只保留必要的输入框。</li>
+          <li><b>标签置于输入框上方</b>焦点态为主色描边加 3px 浅蓝光圈，一眼能看出光标在哪。</li>
+          <li><b>注册态复用同一窗口</b>追加"确认密码"一行，主按钮文字由"登录"变"注册"，其余不动。</li>
+          <li><b>错误就近提示</b>用户名或密码错误显示在输入框下方，不再弹窗打断输入。</li>
+        </ul>
+      </div>
+      <div class="art">
+        <div class="mock" style="max-width:820px">
+          <div class="winbar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="wt">用户登录</div>
+            <div style="width:46px"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,296px) minmax(0,1fr);min-height:398px">
+            <div style="background:#0E1B3D;padding:26px 24px;display:flex;flex-direction:column;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 2px,transparent 2px 12px)">
+              <div style="display:flex;align-items:center;gap:10px">
+                <i style="width:34px;height:34px;border-radius:10px;background:#F59E0B;display:grid;place-items:center;font-style:normal">
+                  <svg viewBox="0 0 16 16" style="width:19px;height:19px;stroke:#3A2400;fill:none;stroke-width:1.4;stroke-linejoin:round"><path d="M8 2l5.5 3v6L8 14l-5.5-3V5L8 2z"></path><path d="M2.5 5L8 8l5.5-3M8 8v6"></path></svg>
+                </i>
+                <span style="color:#fff;font-size:13.5px;font-weight:500">智能快递分类系统</span>
+              </div>
+              <div style="margin-top:auto;padding-top:30px">
+                <div style="color:#fff;font-size:19px;font-weight:700;line-height:1.45">深度学习驱动的<br>包裹识别与面单提取</div>
+                <div style="color:#8E9CBB;font-size:11.5px;margin-top:10px;line-height:1.85">包裹分类 · 面单检测 · OCR 字段提取<br>支持图片与视频两种识别模式</div>
+              </div>
+              <div class="mono" style="color:#6C7B99;font-size:10.5px;margin-top:22px">v1.0 · 2026</div>
+            </div>
+            <div style="background:#fff;padding:30px 32px;display:flex;flex-direction:column;justify-content:center">
+              <div style="font-size:17px;font-weight:700">欢迎回来</div>
+              <div style="font-size:11.5px;color:#667085;margin:5px 0 20px">登录后即可上传包裹图片开始识别</div>
+              <div class="mfield">
+                <label>用户名</label>
+                <div class="in focusring">admin</div>
+              </div>
+              <div class="mfield">
+                <label>密码</label>
+                <div class="in">••••••••</div>
+                <div class="hint">忘记密码请联系管理员重置</div>
+              </div>
+              <div class="btn" style="justify-content:center;padding:10px;border-radius:9px;margin-top:4px">登 录</div>
+              <div style="text-align:center;font-size:11.5px;color:#667085;margin-top:15px">没有账号？<span style="color:#2B5CE6;font-weight:500">立即注册</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="caption"><b>登录态</b> · 建议窗口 860×540，深色品牌区占 36%；注册态在此基础追加一行"确认密码"。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="image">
+    <div class="sec-head">
+      <h2>四、主界面 · 图片检测</h2>
+      <p>功能区由"标题 + 两张图 + 两个整行按钮 + 一个文本框"改为"工具栏 + 双卡片工作区 + 结构化信息卡"。这是改动最大、收益也最明显的一屏。</p>
+    </div>
+    <div class="spec">
+      <div>
+        <ul class="notes">
+          <li><b>导航移到左侧</b>当前项实心高亮，底部固定显示当前登录用户与角色，退出登录放在这里。</li>
+          <li><b>操作进工具栏</b>上传图片（次要，白底描边）与开始检测（主要，实心蓝）并排放在右上，不再各占一整行。</li>
+          <li><b>识别信息结构化</b>包裹类型、收件人、电话、运单号、地址逐行展示；原始 OCR 文本折叠在右侧虚线框内备查。</li>
+          <li><b>结果图标注检测框</b>包裹框用绿色、面单框用蓝色，框上直接标类别与置信度，而不是只给一张图。</li>
+        </ul>
+      </div>
+      <div class="art">
+        <div class="mock">
+          <div class="winbar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="wt">智能快递分类系统</div>
+            <div style="width:46px"></div>
+          </div>
+          <div class="appbody">
+            <div class="side">
+              <div class="brand"><i>快</i><span>智能快递<br>分类系统</span></div>
+              <div class="navlab">识别</div>
+              <div class="nav on"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"></rect><circle cx="6" cy="7" r="1.3"></circle><path d="M3 12l3.5-3.5L9 11l2-2 2 2"></path></svg>图片检测</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="8" height="9" rx="2"></rect><path d="M10 8l4-2.5v5L10 8z"></path></svg>视频检测</div>
+              <div class="navlab">记录</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.6"></circle><path d="M8 5v3.2l2.2 1.4"></path></svg>历史记录<span class="n">12</span></div>
+              <div class="navlab">管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="2.2"></circle><path d="M2.4 13c0-2 1.6-3.4 3.6-3.4S9.6 11 9.6 13"></path><path d="M11.2 5.8a1.8 1.8 0 010 3.4M12.4 12.9c-.2-1.4-.8-2.5-1.8-3.1"></path></svg>用户管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1.6"></rect><path d="M5.6 6.6h4.8M5.6 9.2h3"></path></svg>登录日志</div>
+              <div class="sidefoot">
+                <div class="ava">A</div>
+                <div class="u">admin<small>管理员</small></div>
+              </div>
+            </div>
+            <div class="main">
+              <div class="phead">
+                <div>
+                  <h4>图片识别</h4>
+                  <p>上传包裹照片，自动识别包裹类型并提取面单信息</p>
+                </div>
+                <div class="spacer">
+                  <span class="btn ghost">上传图片</span>
+                  <span class="btn">开始检测</span>
+                </div>
+              </div>
+              <div class="duo">
+                <div class="pane">
+                  <div class="pane-h">原图 <small>IMG_2043.jpg</small></div>
+                  <div class="canvas" style="background:linear-gradient(#EAEEF4 62%,#DFE5EE 62%)">
+                    <div class="parcel" style="left:27%;top:21%;width:44%;height:47%"><span></span></div>
+                  </div>
+                </div>
+                <div class="pane">
+                  <div class="pane-h">识别结果 <small>2 个目标 · 118 ms</small></div>
+                  <div class="canvas" style="background:linear-gradient(#EAEEF4 62%,#DFE5EE 62%)">
+                    <div class="parcel" style="left:27%;top:21%;width:44%;height:47%"><span></span></div>
+                    <div class="det" style="left:25%;top:19%;width:48%;height:51%"><b>纸箱 0.94</b></div>
+                    <div class="det wb" style="left:31%;top:33%;width:23%;height:21%"><b>面单 0.88</b></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pane">
+                <div class="pane-h">识别信息 <small>包裹置信度 0.94</small></div>
+                <div style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:14px">
+                  <dl class="fieldgrid">
+                    <dt>包裹类型</dt><dd><span class="chip amber">纸箱</span></dd>
+                    <dt>收件人</dt><dd>张伟</dd>
+                    <dt>电话</dt><dd class="mono">138 0013 8000</dd>
+                    <dt>运单号</dt><dd class="mono">SF1234567890123</dd>
+                    <dt>地址</dt><dd>北京市朝阳区建国路 88 号 3 单元 1201</dd>
+                  </dl>
+                  <div class="raw">收件人：张伟
+电话：13800138000
+地址：北京市朝阳区建国路88号3单元1201
+运单号：SF1234567890123</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption"><b>完整主界面</b> · 窗口 1200×800。表格与卡片内为示例数据，用户列表取自当前数据库。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="video">
+    <div class="sec-head">
+      <h2>五、主界面 · 视频检测</h2>
+      <p>三个按钮目前纵排占满整行、视频区无状态反馈。建议把视频画面放大为主体，按钮收进工具栏，并补上运行状态与本帧检出结果。</p>
+    </div>
+    <div class="spec">
+      <div>
+        <ul class="notes">
+          <li><b>三按钮同级工具化</b>启动类操作并排，停止检测单独用红色描边，避免误点。</li>
+          <li><b>画面左上角状态浮层</b>绿点加"检测中 · 12 FPS"，停止时变灰色"已停止"，运行状态一目了然。</li>
+          <li><b>本帧检出表</b>下面直接列出本帧检出的包裹与置信度，比只看画面更利于演示讲解。</li>
+          <li><b>底部指标条</b>帧率、单帧耗时与运行设备（CPU / CUDA）用等宽字体排一行。</li>
+        </ul>
+      </div>
+      <div class="art">
+        <div class="mock">
+          <div class="winbar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="wt">智能快递分类系统</div>
+            <div style="width:46px"></div>
+          </div>
+          <div class="appbody">
+            <div class="side">
+              <div class="brand"><i>快</i><span>智能快递<br>分类系统</span></div>
+              <div class="navlab">识别</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"></rect><circle cx="6" cy="7" r="1.3"></circle><path d="M3 12l3.5-3.5L9 11l2-2 2 2"></path></svg>图片检测</div>
+              <div class="nav on"><svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="8" height="9" rx="2"></rect><path d="M10 8l4-2.5v5L10 8z"></path></svg>视频检测</div>
+              <div class="navlab">记录</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.6"></circle><path d="M8 5v3.2l2.2 1.4"></path></svg>历史记录<span class="n">12</span></div>
+              <div class="navlab">管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="2.2"></circle><path d="M2.4 13c0-2 1.6-3.4 3.6-3.4S9.6 11 9.6 13"></path><path d="M11.2 5.8a1.8 1.8 0 010 3.4M12.4 12.9c-.2-1.4-.8-2.5-1.8-3.1"></path></svg>用户管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1.6"></rect><path d="M5.6 6.6h4.8M5.6 9.2h3"></path></svg>登录日志</div>
+              <div class="sidefoot">
+                <div class="ava">A</div>
+                <div class="u">admin<small>管理员</small></div>
+              </div>
+            </div>
+            <div class="main">
+              <div class="phead">
+                <div>
+                  <h4>视频检测</h4>
+                  <p>支持摄像头实时监测与本地视频文件逐帧检测</p>
+                </div>
+                <div class="spacer">
+                  <span class="btn">摄像头实时监测</span>
+                  <span class="btn ghost">视频文件检测</span>
+                  <span class="btn danger">停止检测</span>
+                </div>
+              </div>
+              <div class="pane" style="padding:10px">
+                <div style="position:relative;border-radius:9px;overflow:hidden;background:linear-gradient(#E7EBF1 58%,#DCE2EB 58%);aspect-ratio:16/8">
+                  <div class="parcel" style="left:14%;top:30%;width:22%;height:40%"><span></span></div>
+                  <div class="parcel" style="left:56%;top:24%;width:26%;height:48%"><span></span></div>
+                  <div class="det" style="left:13%;top:28%;width:24%;height:44%"><b>纸箱 0.92</b></div>
+                  <div class="det wb" style="left:17%;top:40%;width:12%;height:18%"><b>面单 0.85</b></div>
+                  <div class="det" style="left:55%;top:22%;width:28%;height:52%"><b>文件封 0.96</b></div>
+                  <div class="chip green" style="position:absolute;left:12px;top:12px;background:rgba(255,255,255,.92)"><span class="dot"></span>检测中 · 12 FPS</div>
+                  <div class="chip" style="position:absolute;right:12px;top:12px;background:rgba(255,255,255,.92)">摄像头 0</div>
+                </div>
+                <div class="statusbar">
+                  <span>本帧 3 件</span><span>用时 42 ms</span><span>设备 CPU</span><span>分辨率 1280×720</span>
+                </div>
+              </div>
+              <div class="pane">
+                <div class="pane-h">本帧检出 <small>3 个目标</small></div>
+                <div class="scrollx">
+                  <table class="t">
+                    <thead>
+                      <tr><th>序号</th><th>包裹类型</th><th>置信度</th><th>框选位置 (x, y, w, h)</th><th>面单</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td class="mono">1</td><td><span class="chip amber">纸箱</span></td><td class="mono">0.92</td><td class="mono">166, 201, 307, 316</td><td class="mono">0.85</td></tr>
+                      <tr><td class="mono">2</td><td><span class="chip amber">文件封</span></td><td class="mono">0.96</td><td class="mono">704, 172, 358, 372</td><td class="mono">—</td></tr>
+                      <tr><td class="mono">3</td><td><span class="chip amber">塑料袋</span></td><td class="mono">0.71</td><td class="mono">398, 268, 214, 240</td><td class="mono">0.63</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption"><b>视频检测运行态</b> · 检出表为示例数据；停止后状态浮层变为灰色"已停止"。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="history">
+    <div class="sec-head">
+      <h2>六、历史记录</h2>
+      <p>表格目前是 Qt 默认外观：竖向网格线、行高压得紧、类型与操作全靠文字区分。建议改为自定义表头加状态标签，并在顶部补一个搜索与筛选栏。</p>
+    </div>
+    <div class="spec">
+      <div>
+        <ul class="notes">
+          <li><b>去竖线、加行高</b>只保留行间细横线，行高 34px，长地址自动截断并保留完整内容提示。</li>
+          <li><b>状态用标签表达</b>包裹类型用琥珀色标签，识别类型用中性标签，扫一眼就能分类。</li>
+          <li><b>行内操作按钮</b>"详情"为描边小按钮，"删除"为红色描边小按钮，不再与内容抢视觉。</li>
+          <li><b>详情改侧栏抽屉</b>现在是弹出文本框；建议改为右侧抽屉卡片，字段分行显示，可对照原图。</li>
+        </ul>
+      </div>
+      <div class="art">
+        <div class="mock">
+          <div class="winbar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="wt">智能快递分类系统</div>
+            <div style="width:46px"></div>
+          </div>
+          <div class="appbody">
+            <div class="side">
+              <div class="brand"><i>快</i><span>智能快递<br>分类系统</span></div>
+              <div class="navlab">识别</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"></rect><circle cx="6" cy="7" r="1.3"></circle><path d="M3 12l3.5-3.5L9 11l2-2 2 2"></path></svg>图片检测</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="8" height="9" rx="2"></rect><path d="M10 8l4-2.5v5L10 8z"></path></svg>视频检测</div>
+              <div class="navlab">记录</div>
+              <div class="nav on"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.6"></circle><path d="M8 5v3.2l2.2 1.4"></path></svg>历史记录<span class="n">12</span></div>
+              <div class="navlab">管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="2.2"></circle><path d="M2.4 13c0-2 1.6-3.4 3.6-3.4S9.6 11 9.6 13"></path><path d="M11.2 5.8a1.8 1.8 0 010 3.4M12.4 12.9c-.2-1.4-.8-2.5-1.8-3.1"></path></svg>用户管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1.6"></rect><path d="M5.6 6.6h4.8M5.6 9.2h3"></path></svg>登录日志</div>
+              <div class="sidefoot">
+                <div class="ava">A</div>
+                <div class="u">admin<small>管理员</small></div>
+              </div>
+            </div>
+            <div class="main">
+              <div class="phead">
+                <div>
+                  <h4>识别历史记录</h4>
+                  <p>仅显示当前账号的识别记录，按时间倒序</p>
+                </div>
+                <div class="spacer">
+                  <span class="btn ghost">刷新记录</span>
+                </div>
+              </div>
+              <div class="pane">
+                <div class="toolbar">
+                  <div class="search">
+                    <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"></circle><path d="M10.2 10.2L14 14"></path></svg>
+                    搜索姓名 / 电话 / 运单号
+                  </div>
+                  <span class="chip blue">全部 12</span>
+                  <span class="chip">图片 8</span>
+                  <span class="chip">视频 4</span>
+                </div>
+                <div class="scrollx">
+                  <table class="t">
+                    <thead>
+                      <tr><th>ID</th><th>识别时间</th><th>类型</th><th>包裹类型</th><th>姓名</th><th>电话</th><th>地址摘要</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="mono">31</td><td class="mono">2026-10-02 12:41</td>
+                        <td><span class="chip">图片</span></td><td><span class="chip amber">纸箱</span></td>
+                        <td>张伟</td><td class="mono">13800138000</td><td>北京市朝阳区建国路 88 号…</td>
+                        <td><span class="btn ghost sm">详情</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">30</td><td class="mono">2026-10-02 11:20</td>
+                        <td><span class="chip">视频</span></td><td><span class="chip amber">文件封</span></td>
+                        <td>李娜</td><td class="mono">13900139000</td><td>上海市浦东新区世纪大道 100…</td>
+                        <td><span class="btn ghost sm">详情</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">29</td><td class="mono">2026-10-01 20:15</td>
+                        <td><span class="chip">图片</span></td><td><span class="chip amber">塑料袋</span></td>
+                        <td>王强</td><td class="mono">13700137000</td><td>广州市天河区体育西路 103…</td>
+                        <td><span class="btn ghost sm">详情</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">28</td><td class="mono">2026-10-01 19:02</td>
+                        <td><span class="chip">图片</span></td><td><span class="chip amber">纸箱</span></td>
+                        <td>陈静</td><td class="mono">13600136000</td><td>成都市武侯区人民南路四段 1…</td>
+                        <td><span class="btn ghost sm">详情</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">27</td><td class="mono">2026-09-30 16:44</td>
+                        <td><span class="chip">视频</span></td><td><span class="chip amber">纸箱</span></td>
+                        <td>刘洋</td><td class="mono">13500135000</td><td>杭州市西湖区文三路 90 号…</td>
+                        <td><span class="btn ghost sm">详情</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="statusbar" style="border-top:1px solid var(--app-line);padding-top:9px">
+                  <span>共 12 条</span><span>显示最近 100 条</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption"><b>历史记录</b> · 搜索框与类型筛选为建议新增；表格内容为示例数据。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="users">
+    <div class="sec-head">
+      <h2>七、用户管理（管理员）</h2>
+      <p>这一屏现在只是一个裸表格加"刷新列表"。建议补上顶部概览数字与"新增用户"入口，角色与操作按钮做视觉降噪。</p>
+    </div>
+    <div class="spec">
+      <div>
+        <ul class="notes">
+          <li><b>概览数字条</b>用户总数、管理员数、今日登录次数<code class="inl"> 建议新增</code>，管理员一进来就有全局感。</li>
+          <li><b>角色用标签区分</b>管理员为蓝色标签，普通用户为中性标签，不再靠文字长度辨认。</li>
+          <li><b>当前账号不可删</b>自己那一行的"删除"置灰并注明原因，避免点了才被弹窗拦住。</li>
+          <li><b>新增用户</b><code class="inl"> 建议新增</code>目前只能注册或修改，管理员补一个直接建号入口会更完整。</li>
+        </ul>
+      </div>
+      <div class="art">
+        <div class="mock">
+          <div class="winbar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="wt">智能快递分类系统</div>
+            <div style="width:46px"></div>
+          </div>
+          <div class="appbody">
+            <div class="side">
+              <div class="brand"><i>快</i><span>智能快递<br>分类系统</span></div>
+              <div class="navlab">识别</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"></rect><circle cx="6" cy="7" r="1.3"></circle><path d="M3 12l3.5-3.5L9 11l2-2 2 2"></path></svg>图片检测</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="8" height="9" rx="2"></rect><path d="M10 8l4-2.5v5L10 8z"></path></svg>视频检测</div>
+              <div class="navlab">记录</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.6"></circle><path d="M8 5v3.2l2.2 1.4"></path></svg>历史记录<span class="n">12</span></div>
+              <div class="navlab">管理</div>
+              <div class="nav on"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="2.2"></circle><path d="M2.4 13c0-2 1.6-3.4 3.6-3.4S9.6 11 9.6 13"></path><path d="M11.2 5.8a1.8 1.8 0 010 3.4M12.4 12.9c-.2-1.4-.8-2.5-1.8-3.1"></path></svg>用户管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1.6"></rect><path d="M5.6 6.6h4.8M5.6 9.2h3"></path></svg>登录日志</div>
+              <div class="sidefoot">
+                <div class="ava">A</div>
+                <div class="u">admin<small>管理员</small></div>
+              </div>
+            </div>
+            <div class="main">
+              <div class="phead">
+                <div>
+                  <h4>用户管理</h4>
+                  <p>共 5 个账号，其中管理员 1 个</p>
+                </div>
+                <div class="spacer">
+                  <span class="btn">新增用户</span>
+                  <span class="btn ghost">刷新列表</span>
+                </div>
+              </div>
+              <div class="stats">
+                <div><b>5</b><small>用户总数</small></div>
+                <div><b>1</b><small>管理员</small></div>
+                <div><b>6</b><small>今日登录次数</small></div>
+                <div><b>2</b><small>今日新增</small></div>
+              </div>
+              <div class="pane">
+                <div class="scrollx">
+                  <table class="t">
+                    <thead>
+                      <tr><th>ID</th><th>用户名</th><th>角色</th><th>注册时间</th><th>最后登录</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="mono">1</td><td>default</td><td><span class="chip">普通用户</span></td>
+                        <td class="mono">2026-04-19 18:46</td><td class="mono">—</td>
+                        <td><span class="btn ghost sm">修改</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">2</td><td>Rinya</td><td><span class="chip">普通用户</span></td>
+                        <td class="mono">2026-04-19 20:28</td><td class="mono">2026-09-28 03:44</td>
+                        <td><span class="btn ghost sm">修改</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">3</td><td>user</td><td><span class="chip">普通用户</span></td>
+                        <td class="mono">2026-04-28 03:57</td><td class="mono">2026-05-07 02:51</td>
+                        <td><span class="btn ghost sm">修改</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">4</td><td>chx</td><td><span class="chip">普通用户</span></td>
+                        <td class="mono">2026-09-28 02:59</td><td class="mono">2026-09-28 03:00</td>
+                        <td><span class="btn ghost sm">修改</span> <span class="btn danger sm">删除</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono">5</td><td>admin <span class="chip blue">当前登录</span></td><td><span class="chip blue">管理员</span></td>
+                        <td class="mono">2026-10-02 12:43</td><td class="mono">2026-10-02 12:52</td>
+                        <td><span class="btn ghost sm">修改</span> <span class="btn dis sm">删除</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption"><b>用户管理</b> · 表格为当前数据库中的真实账号；概览数字与"新增用户"为建议新增项。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="loginlog">
+    <div class="sec-head">
+      <h2>八、登录日志（管理员）</h2>
+      <p>登录日志是安全审计的入口，现在四个纯文字列里"成功 / 失败"几乎看不出差别。建议用色标签强化结果，并补上筛选。</p>
+    </div>
+    <div class="spec">
+      <div>
+        <ul class="notes">
+          <li><b>结果色标签</b>成功为绿色、失败为红色，异常登录一眼可见。</li>
+          <li><b>筛选标签</b>全部 / 成功 / 失败三个筛选<code class="inl"> 建议新增</code>，排查异常时不必逐行找。</li>
+          <li><b>保留失败记录</b>失败登录同样入库，用户名快照保留，便于定位异常尝试。</li>
+          <li><b>时间统一格式</b>用等宽字体并统一到分钟，列宽稳定不跳动。</li>
+        </ul>
+      </div>
+      <div class="art">
+        <div class="mock">
+          <div class="winbar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="wt">智能快递分类系统</div>
+            <div style="width:46px"></div>
+          </div>
+          <div class="appbody">
+            <div class="side">
+              <div class="brand"><i>快</i><span>智能快递<br>分类系统</span></div>
+              <div class="navlab">识别</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"></rect><circle cx="6" cy="7" r="1.3"></circle><path d="M3 12l3.5-3.5L9 11l2-2 2 2"></path></svg>图片检测</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="8" height="9" rx="2"></rect><path d="M10 8l4-2.5v5L10 8z"></path></svg>视频检测</div>
+              <div class="navlab">记录</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.6"></circle><path d="M8 5v3.2l2.2 1.4"></path></svg>历史记录<span class="n">12</span></div>
+              <div class="navlab">管理</div>
+              <div class="nav"><svg viewBox="0 0 16 16"><circle cx="6" cy="6" r="2.2"></circle><path d="M2.4 13c0-2 1.6-3.4 3.6-3.4S9.6 11 9.6 13"></path><path d="M11.2 5.8a1.8 1.8 0 010 3.4M12.4 12.9c-.2-1.4-.8-2.5-1.8-3.1"></path></svg>用户管理</div>
+              <div class="nav on"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="1.6"></rect><path d="M5.6 6.6h4.8M5.6 9.2h3"></path></svg>登录日志</div>
+              <div class="sidefoot">
+                <div class="ava">A</div>
+                <div class="u">admin<small>管理员</small></div>
+              </div>
+            </div>
+            <div class="main">
+              <div class="phead">
+                <div>
+                  <h4>用户登录日志</h4>
+                  <p>记录全部登录尝试，含失败记录，按时间倒序</p>
+                </div>
+                <div class="spacer">
+                  <span class="btn ghost">刷新日志</span>
+                </div>
+              </div>
+              <div class="pane">
+                <div class="toolbar">
+                  <span class="chip blue">全部 7</span>
+                  <span class="chip">成功 2</span>
+                  <span class="chip">失败 5</span>
+                </div>
+                <div class="scrollx">
+                  <table class="t">
+                    <thead>
+                      <tr><th>ID</th><th>用户名</th><th>登录时间</th><th>结果</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td class="mono">7</td><td>admin</td><td class="mono">2026-10-02 12:52</td><td><span class="chip green"><span class="dot"></span>成功</span></td></tr>
+                      <tr><td class="mono">6</td><td>admin</td><td class="mono">2026-10-02 12:52</td><td><span class="chip green"><span class="dot"></span>成功</span></td></tr>
+                      <tr><td class="mono">5</td><td>admin</td><td class="mono">2026-10-02 12:48</td><td><span class="chip red"><span class="dot"></span>失败</span></td></tr>
+                      <tr><td class="mono">4</td><td>admin</td><td class="mono">2026-10-02 12:48</td><td><span class="chip red"><span class="dot"></span>失败</span></td></tr>
+                      <tr><td class="mono">3</td><td>admin</td><td class="mono">2026-10-02 12:47</td><td><span class="chip red"><span class="dot"></span>失败</span></td></tr>
+                      <tr><td class="mono">2</td><td>admin</td><td class="mono">2026-10-02 12:47</td><td><span class="chip red"><span class="dot"></span>失败</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="statusbar" style="border-top:1px solid var(--app-line);padding-top:9px">
+                  <span>显示最近 200 条</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption"><b>登录日志</b> · 6 条记录取自本次排查时的真实登录历史（5 次失败 + 2 次成功）。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="dialogs">
+    <div class="sec-head">
+      <h2>九、对话框与操作反馈</h2>
+      <p>现在的"修改用户"窗口是默认样式，删除确认与提示直接用了 <code class="inl">QMessageBox</code>——它默认按钮文字是英文 Yes / No，和全中文界面不一致，这是答辩时容易被注意到的小瑕疵。</p>
+    </div>
+    <div class="spec wide">
+      <div class="art">
+        <div class="dlgrow">
+          <div>
+            <div class="dlg">
+              <div class="dlg-h">修改用户信息<small>正在修改：Rinya（ID 2）</small></div>
+              <div class="dlg-b">
+                <div class="mfield">
+                  <label>用户名</label>
+                  <div class="in focusring">Rinya</div>
+                  <div class="hint">用户名至少 2 个字符</div>
+                </div>
+                <div class="mfield" style="margin-bottom:4px">
+                  <label>新密码</label>
+                  <div class="in ph">留空则不修改密码</div>
+                  <div class="hint">密码至少 6 位，保存后立即生效</div>
+                </div>
+              </div>
+              <div class="dlg-f">
+                <span class="btn ghost">取消</span>
+                <span class="btn">保存修改</span>
+              </div>
+            </div>
+            <p class="caption"><b>修改用户</b> · 建议 460px 宽，标题栏写明正在修改哪个账号，按钮由 OK / Cancel 改为"取消 / 保存修改"。</p>
+          </div>
+          <div>
+            <div class="dlg">
+              <div class="dlg-h" style="display:flex;align-items:center;gap:10px">
+                <i style="width:26px;height:26px;border-radius:50%;background:#FDECEC;color:#E5484D;display:grid;place-items:center;font-style:normal;font-weight:700;flex:0 0 26px">!</i>
+                确认删除用户
+              </div>
+              <div class="dlg-b">
+                <div style="font-size:13px;margin-bottom:6px">确定要删除用户 <b>chx</b> 吗？</div>
+                <div style="font-size:12px;color:#667085">该用户的识别记录将一并删除，登录日志会保留以便追溯。此操作不可撤销。</div>
+              </div>
+              <div class="dlg-f">
+                <span class="btn ghost">取消</span>
+                <span class="btn" style="background:#E5484D">确认删除</span>
+              </div>
+            </div>
+            <p class="caption"><b>危险操作确认</b> · 危险按钮用实心红且默认焦点在"取消"；说明文字讲清后果，符合"删除不可撤销"的语义。</p>
+          </div>
+          <div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="toast">
+                <i style="background:#12915A">✓</i>
+                <div><b>已保存</b><small>用户 Rinya 的信息已更新</small></div>
+              </div>
+              <div class="toast">
+                <i style="background:#E5484D">!</i>
+                <div><b>登录失败</b><small>用户名或密码错误，已记录本次尝试</small></div>
+              </div>
+              <div class="toast">
+                <i style="background:#2B5CE6">i</i>
+                <div><b>检测完成</b><small>识别到 2 个目标，结果已存入历史记录</small></div>
+              </div>
+            </div>
+            <p class="caption"><b>轻提示</b> · 成功类反馈改在右下角浮出，2 秒后自动消失；只有需要用户决策的操作才用对话框。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan">
+    <div class="sec-head">
+      <h2>十、实施顺序与起始样式表</h2>
+      <p>建议按下面的顺序改，每一步都能单独运行验证。前三步不改任何业务逻辑，风险最低、观感提升最快。</p>
+    </div>
+    <div class="table-scroll">
+      <table class="doc">
+        <thead>
+          <tr><th>步骤</th><th>内容</th><th>涉及文件</th><th>工作量</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1 · 打底</td><td>全局字体换为微软雅黑，页面底色、卡片、按钮、输入框、表格的 QSS 统一</td><td><code class="inl">window.py</code> 新增 <code class="inl">QSS</code> 常量</td><td>约 60 行样式，半天</td></tr>
+          <tr><td>2 · 组件</td><td>按钮分主 / 次 / 危险三级；表格去竖线、加行高、状态改用色标签</td><td><code class="inl">window.py</code> 各 initUI</td><td>半天</td></tr>
+          <tr><td>3 · 反馈</td><td>登录页改左右分栏；<code class="inl">QMessageBox</code> 按钮改中文或替换为自定义对话框；成功提示改轻提示</td><td>LoginDialog / EditUserDialog</td><td>半天到一天</td></tr>
+          <tr><td>4 · 结构</td><td>顶部标签页换左侧导航（QListWidget + QStackedWidget），功能与信号槽全部保持</td><td>MainWindow 基类与 initUI</td><td>一天</td></tr>
+          <tr><td>5 · 加分</td><td>识别信息结构化字段、历史详情抽屉、用户管理概览数字与新增用户</td><td>window.py / db.py</td><td>视时间取舍</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:34px">起始样式表（第 1 步可直接粘贴）</h3>
+    <div style="position:relative">
+      <button class="copybtn" type="button" data-copy="qss" aria-label="复制样式表">复制</button>
+      <pre class="code" id="qss"><code>/* ============ 智能快递分类系统 · 全局样式（建议放在 window.py 顶部常量） ============ */
+QWidget {
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    color: #101828;
+}
+QMainWindow, QDialog { background: #F4F6FA; }
+
+/* ---------- 左侧导航：QListWidget + QStackedWidget（替换 QTabWidget） ---------- */
+QListWidget#nav { background: #0E1B3D; border: none; outline: none; padding: 10px 8px; }
+QListWidget#nav::item { color: #C3CDE0; height: 38px; border-radius: 8px; padding-left: 12px; }
+QListWidget#nav::item:hover { background: rgba(255, 255, 255, .08); color: #FFFFFF; }
+QListWidget#nav::item:selected { background: #2B5CE6; color: #FFFFFF; }
+
+/* ---------- 卡片、标题 ---------- */
+QFrame#card { background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 12px; }
+QLabel#pageTitle { font-size: 16px; font-weight: 600; }
+QLabel#pageSub { color: #667085; font-size: 12px; }
+
+/* ---------- 按钮：主 / 次 / 危险（用动态属性区分，切换后需 repolish） ---------- */
+QPushButton {
+    background: #2B5CE6; color: #FFFFFF; border: none;
+    border-radius: 8px; padding: 7px 16px; font-weight: 500;
+}
+QPushButton:hover { background: #1E47B8; }
+QPushButton:disabled { background: #EEF0F4; color: #98A2B3; }
+QPushButton[variant="ghost"] { background: #FFFFFF; color: #101828; border: 1px solid #E4E7EC; }
+QPushButton[variant="ghost"]:hover { border-color: #2B5CE6; color: #2B5CE6; }
+QPushButton[variant="danger"] { background: #FFFFFF; color: #E5484D; border: 1px solid #E5484D; }
+QPushButton[variant="danger"]:hover { background: #FDECEC; }
+
+/* ---------- 输入框 ---------- */
+QLineEdit, QTextEdit {
+    background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 8px; padding: 8px 10px;
+}
+QLineEdit:focus, QTextEdit:focus { border: 1px solid #2B5CE6; }
+
+/* ---------- 表格：去竖线、行高 34、表头弱化 ---------- */
+QTableWidget {
+    background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 10px;
+    gridline-color: transparent; outline: none;
+}
+QTableWidget::item { border-bottom: 1px solid #F1F3F7; padding: 7px 9px; }
+QTableWidget::item:selected { background: #EAF0FF; color: #101828; }
+QHeaderView::section {
+    background: #FFFFFF; color: #667085; font-weight: 600; font-size: 12px;
+    border: none; border-bottom: 1px solid #E4E7EC; padding: 9px;
+}
+
+/* 动态属性的用法：btn.setProperty("variant", "ghost")
+   btn.style().unpolish(btn); btn.style().polish(btn) */</code></pre>
+    </div>
+    <p class="caption" style="margin-top:12px">注：QSS 只负责外观，功能逻辑（信号槽、数据库调用）完全不用动。动态属性改完后需要 <code class="inl">unpolish / polish</code> 一次才会生效。</p>
+  </section>
+
+  <section id="next">
+    <div class="sec-head">
+      <h2>下一步</h2>
+      <p>这份稿子定的是方向，还没有改到代码。你确认想采用哪一套之后，我可以直接把改动落到 <code class="inl">window.py</code>：先做第 1–2 步（字体、配色、按钮、表格），改完用离屏渲染把真实运行界面截图出来，和现在的样子放在一起对比，再决定要不要继续做登录页与侧边栏。</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      if (!el) return;
+      var text = el.innerText;
+      var done = function (label) {
+        btn.textContent = label;
+        setTimeout(function () { btn.textContent = '复制'; }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done('已复制'); },
+          function () { selectText(el); done('已选中，按 Ctrl+C'); });
+      } else {
+        selectText(el); done('已选中，按 Ctrl+C');
+      }
+    });
+  });
+  function selectText(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+</script>
